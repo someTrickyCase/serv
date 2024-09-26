@@ -17,14 +17,15 @@ async function getData() {
 
 app.use("/get-categories", (req, res, next) => {
   console.log("some call in some-categories endpoint");
-  if (data) return;
-  data = getData();
+  if (!data) {
+    data = getData();
+  }
   next();
 });
 
 app.get("/get-categories", (req, res) => {
   console.log("trying to send...");
-  res.send(data);
+  res.send("DATA");
   console.log("data was sended");
 });
 
