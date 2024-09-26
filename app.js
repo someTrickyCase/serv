@@ -6,6 +6,7 @@ const app = express();
 async function getData() {
   try {
     const data = await getCategories();
+    console.log("data was fetched");
     return data;
   } catch (error) {
     console.error(error);
@@ -18,8 +19,10 @@ app.use("/get-categories", (req, res, next) => {
 });
 
 app.get("/get-categories", (req, res) => {
-  const data = getData();
-  res.send(JSON.stringify(data));
+  getData()
+    .then((call) => call.json())
+    .then((call) => res.send(call));
+  console.log("data was sended");
 });
 
 app.listen(3000);
