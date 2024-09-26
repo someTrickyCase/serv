@@ -1,7 +1,9 @@
 const express = require("express");
 const getCategories = require("./scrapper/scrapper");
+const cors = requier("express-cors");
 
 const app = express();
+app.use(cors);
 
 let data;
 
