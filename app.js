@@ -3,6 +3,8 @@ const getCategories = require("./scrapper/scrapper");
 
 const app = express();
 
+let data;
+
 async function getData() {
   try {
     const data = await getCategories();
@@ -15,13 +17,14 @@ async function getData() {
 
 app.use("/get-categories", (req, res, next) => {
   console.log("some call in some-categories endpoint");
+  if (data) return;
+  data = getData();
   next();
 });
 
 app.get("/get-categories", (req, res) => {
-  getData()
-    .then((call) => call.json())
-    .then((call) => res.send(call));
+  console.log("trying to send...");
+  res.send(data);
   console.log("data was sended");
 });
 
