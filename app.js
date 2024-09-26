@@ -5,8 +5,6 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-let data;
-
 async function getData() {
   try {
     const data = await getCategories();
@@ -27,8 +25,10 @@ async function getData() {
 // });
 
 app.get("/get-categories", (req, res) => {
-  console.log("trying to send...");
-  res.send("DATA");
+  (async () => {
+    const data = await getData();
+    res.send(JSON.stringify(data));
+  })();
   console.log("data was sended");
 });
 
