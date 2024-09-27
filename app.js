@@ -1,35 +1,55 @@
 const express = require("express");
-const getCategories = require("./scrapper/scrapper");
 const cors = require("cors");
+const getCategories = require("./scrapper/scrapper");
+const getCategory = require("./scrapper/scrapper");
 
 const app = express();
 app.use(cors());
 
-async function getData() {
-  try {
-    const data = await getCategories();
-    console.log("data was fetched");
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
+let queriesCounter = 0;
+
+async function getCategoriesData() {
+    try {
+        const data = await getCategories();
+        console.log("categories data was fetched");
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-// app.use("/get-categories", (req, res, next) => {
-//   console.log("some call in some-categories endpoint");
-//   if (!data) {
-//     data = getData().then(next());
-//   } else {
-//     next()
-//   }
-// });
+async function getCategoryData() {
+    try {
+        const data = await getCategory();
+        console.log("category data was fetched");
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+app.use("/", (req, res, next) => {
+    queriesCounter++;
+    console.log("queries counted", queriesCounter);
+    next();
+});
 
 app.get("/get-categories", (req, res) => {
-  (async () => {
-    const data = await getData();
-    res.send(JSON.stringify(data));
-  })();
-  console.log("data was sended");
+    (async () => {
+        const data = await getCategoriesData();
+        res.send(JSON.stringify(data));
+    })();
+    console.log("categories data was sended");
+});
+
+app.get("/product-category", (req, res) => {
+    const category = JSON.parse(req.body.category);
+    const page = JSON.parse(req.body.page)(async () => {
+        const data = await getCategoryData(
+            `https://troffi.ru/product-category/${category}/page/${page}`
+        );
+        res.send(JSON.stringify(data));
+    })();
+    console.log("category data was sended");
 });
 
 app.listen(3000);
