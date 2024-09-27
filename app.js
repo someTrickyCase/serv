@@ -8,6 +8,12 @@ app.use(cors());
 
 let queriesCounter = 0;
 
+app.use("", (req, res, next) => {
+    queriesCounter++;
+    console.log("queries counted", queriesCounter);
+    next();
+});
+
 async function getCategoriesData() {
     try {
         const data = await getCategories();
@@ -22,16 +28,11 @@ async function getCategoryData(categoryURL) {
     try {
         const data = await getCategory(categoryURL);
         console.log("category data was fetched");
+        return data;
     } catch (error) {
         console.error(error);
     }
 }
-
-app.use("", (req, res, next) => {
-    queriesCounter++;
-    console.log("queries counted", queriesCounter);
-    next();
-});
 
 app.get("/get-categories", (req, res) => {
     (async () => {
