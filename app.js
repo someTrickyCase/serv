@@ -43,10 +43,14 @@ app.get("/get-categories", (req, res) => {
 });
 
 app.get("/product-category", (req, res) => {
-    const category = JSON.parse(req.body.category);
-    const page = JSON.parse(req.body.page)(async () => {
+    (async () => {
+        const category = JSON.parse(req.body.category);
+        const page = JSON.parse(req.body.page);
+
         const data = await getCategoryData(
-            `https://troffi.ru/product-category/${category}/page/${page}`
+            `https://troffi.ru/product-category/${category || " land-cruiser-prado-150"}/page/${
+                page || "1"
+            }`
         );
         res.send(JSON.stringify(data));
     })();
