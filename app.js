@@ -18,16 +18,16 @@ async function getCategoriesData() {
     }
 }
 
-async function getCategoryData() {
+async function getCategoryData(categoryURL) {
     try {
-        const data = await getCategory();
+        const data = await getCategory(categoryURL);
         console.log("category data was fetched");
     } catch (error) {
         console.error(error);
     }
 }
 
-app.use("/", (req, res, next) => {
+app.use("", (req, res, next) => {
     queriesCounter++;
     console.log("queries counted", queriesCounter);
     next();
