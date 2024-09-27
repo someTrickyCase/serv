@@ -42,20 +42,20 @@ app.get("/get-categories", (req, res) => {
     console.log("categories data was sended");
 });
 
-// app.get("/product-category", (req, res) => {
-//     (async () => {
-//         const category = JSON.parse(req.body.category);
-//         const page = JSON.parse(req.body.page);
+app.get("/product-category", (req, res) => {
+    (async () => {
+        const category = JSON.parse(req.body.category);
+        const page = JSON.parse(req.body.page);
 
-//         const data = await getCategoryData(
-//             `https://troffi.ru/product-category/${category || " land-cruiser-prado-150"}/page/${
-//                 page || "1"
-//             }`
-//         );
-//         res.send(JSON.stringify(data));
-//     })();
-//     console.log("category data was sended");
-// });
+        const data = await getCategoryData(
+            `https://troffi.ru/product-category/${category || " land-cruiser-prado-150"}/page/${
+                page || "1"
+            }`
+        );
+        res.send(JSON.stringify(data));
+    })();
+    console.log("category data was sended");
+});
 
-app.listen(3000);
-console.log("app started on port 3000");
+app.listen(8000);
+console.log("app started on port 8000");

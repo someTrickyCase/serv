@@ -116,8 +116,10 @@ async function getCategories() {
     return { vcms, pickups };
 }
 
-async function getCategory(categoryLink) {
-    const categoryPage = await getHTML(categoryLink);
+async function getCategory(url) {
+    if (!url) return;
+
+    const categoryPage = await getHTML(url);
 
     // Menu
     const menu = {};
