@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const getCategories = require("./scrapper/scrapper");
-// const getCategory = require("./scrapper/scrapper");
+const getCategories = require("./scrapper/scrapInitialData");
+const getCategory = require("./scrapper/scrapCategoryData");
 
 const app = express();
 app.use(cors());
@@ -14,20 +14,11 @@ app.use("", (req, res, next) => {
     next();
 });
 
-async function getCategoriesData() {
+//  INITIAL REQUEST
+
+async function getInitialData() {
     try {
         const data = await getCategories();
-        console.log("categories data was fetched");
-        return data;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function getCategoryData(categoryURL) {
-    try {
-        const data = await getCategory(categoryURL);
-        console.log("category data was fetched");
         return data;
     } catch (error) {
         console.error(error);
@@ -36,25 +27,32 @@ async function getCategoryData(categoryURL) {
 
 app.get("/get-categories", (req, res) => {
     (async () => {
-        const data = await getCategoriesData();
+        const data = await getInitialData();
         res.send(JSON.stringify(data));
     })();
-    console.log("categories data was sended");
+    console.log("INITIAL REQUEST");
 });
+
+// CATEGORY REQUEST
+
+async function getCategoryData(categoryURL) {
+    try {
+        const data = await getCategory(categoryURL);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 app.get("/product-category", (req, res) => {
     (async () => {
-        const category = JSON.parse(req.body.category);
-        const page = JSON.parse(req.body.page);
+        const categoryURL = req.headers.categorylink;
+        const page = req.headers.page;
 
-        const data = await getCategoryData(
-            `https://troffi.ru/product-category/${category || " land-cruiser-prado-150"}/page/${
-                page || "1"
-            }`
-        );
+        const data = await getCategoryData(`${categoryURL}page/${page}`);
         res.send(JSON.stringify(data));
     })();
-    console.log("category data was sended");
+    console.log("CATEGORY REQUEST");
 });
 
 app.listen(8000);
