@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const getCategories = require("./scrapper/scrapInitialData");
 const getCategory = require("./scrapper/scrapCategoryData");
+const getSearchResult = require("./scrapper/scrapSearchData");
 
 const app = express();
 app.use(cors());
@@ -53,6 +54,36 @@ app.get("/product-category", (req, res) => {
         res.send(JSON.stringify(data));
     })();
     console.log("CATEGORY REQUEST");
+});
+
+// SEARCH REQUEST
+async function getSearchResultData(searchRequestURL) {
+    try {
+        const data = await getSearchResult(searchRequestURL);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+app.get("/search", (req, res) => {
+    (async () => {
+        const searchRequest = req.headers.searchrequest;
+
+        const data = await getSearchResultData(
+            `https://troffi.ru/?s=${searchRequest}&post_type=product`
+        );
+        console.log(data);
+        res.send(data);
+    })();
+    console.log("SEARCH REQUEST");
+});
+
+// GET ORDER DATA
+app.post("/order", (req, res) => {
+    const data = req.body;
+    console.log(data);
+    res.send();
 });
 
 app.listen(8000);
